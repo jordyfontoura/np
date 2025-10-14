@@ -25,8 +25,8 @@ fn set_default_package_manager(project_path: &Path) -> Result<&'static PackageMa
     .prompt()?;
 
     if can_write {
-        // Ignore errors silenciosamente
-        let _ = write_package_manager_to_package_json(project_path, selected);
+        let _ = write_package_manager_to_package_json(project_path, selected)
+            .inspect_err(|e| println!("Failed to save 'packageManager' field into package.json: {e}"));
     }
 
     Ok(selected)

@@ -32,7 +32,7 @@ pub fn write_package_manager_to_package_json(
 ) -> anyhow::Result<()> {
     let package_json_path = cwd.join("package.json");
     if !package_json_path.exists() {
-        return Ok(());
+        return Err(anyhow::anyhow!("package.json not found at {:?}", package_json_path));
     }
 
     let content = std::fs::read_to_string(&package_json_path)
