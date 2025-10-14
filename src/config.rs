@@ -2,7 +2,7 @@ use std::{path::Path, process::Command};
 use anyhow::Context;
 use serde_json::Value;
 
-use crate::managers::{get_from_lockfile, get_package_manager_info_by_name, PackageManagerInfo};
+use crate::managers::{get_from_lockfile, get_package_manager_info_by_name, get_possible_lockfiles, PackageManagerInfo};
 
 pub fn read_package_manager_from_package_json(cwd: &Path) -> Option<&'static PackageManagerInfo> {
     let path = cwd.join("package.json");
@@ -14,27 +14,16 @@ pub fn read_package_manager_from_package_json(cwd: &Path) -> Option<&'static Pac
     get_package_manager_info_by_name(name)
 }
 
-pub fn detect_lockfiles<'a>(files: impl IntoIterator<Item = String>) -> Vec<&'a PackageManagerInfo> {
-    files
-        .into_iter()
-        .filter_map(|f| get_from_lockfile(&f))
-        .collect()
-}
-
 pub fn detect_package_managers(cwd: &Path) -> Vec<&'static PackageManagerInfo> {
     if let Some(pm) = read_package_manager_from_package_json(cwd) {
         return vec![pm];
     }
 
-    let files = match std::fs::read_dir(cwd) {
-        Ok(entries) => entries
-            .filter_map(|entry| entry.ok())
-            .filter_map(|entry| entry.file_name().into_string().ok())
-            .collect::<Vec<_>>(),
-        Err(_) => Vec::new(),
-    };
-
-    detect_lockfiles(files)
+    get_possible_lockfiles()
+        .into_iter()
+        .filter(|lock| cwd.join(lock).exists())
+        .filter_map(|lock| get_from_lockfile(lock))
+        .collect()
 }
 
 pub fn write_package_manager_to_package_json(

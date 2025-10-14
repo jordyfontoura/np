@@ -19,6 +19,10 @@ const PACKAGE_MANAGERS: &[PackageManagerInfo] = &[
     },
 ];
 
+pub fn get_possible_lockfiles() -> Vec<&'static str> {
+    PACKAGE_MANAGERS.iter().flat_map(|pm| pm.lockfiles).copied().collect()
+}
+
 pub fn get_from_lockfile(file: &str) -> Option<&'static PackageManagerInfo> {
     PACKAGE_MANAGERS
         .iter()
