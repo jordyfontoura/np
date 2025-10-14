@@ -262,5 +262,14 @@ If `np` saves you time and mental overhead, please consider:
 
 [Report Bug](https://github.com/jordyfontoura/np/issues) · [Request Feature](https://github.com/jordyfontoura/np/issues)
 
+<br/>
+
+<a href="https://discord.com/users/jordyfontoura" target="_blank" rel="noreferrer">
+  <img alt="Discord" src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" />
+  </a>
+  <a href="https://www.linkedin.com/in/jordy-fontoura/" target="_blank" rel="noreferrer">
+  <img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" />
+  </a>
+
 </div>
 
