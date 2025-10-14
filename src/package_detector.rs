@@ -19,27 +19,31 @@ impl PackageManager {
     }
 }
 
-pub fn detect_package_manager(cwd: &Path) -> Option<PackageManager> {
-    // 1) Tenta via package.json -> packageManager
+pub fn detect_package_manager(cwd: &Path) -> Vec<PackageManager> {
+    let mut managers = Vec::new();
+    // 1) Try via package.json -> packageManager
     if let Some(pm) = read_package_manager_from_package_json(cwd) {
-        return Some(pm);
+        managers.push(pm);
+
+        return managers;
     }
 
     // 2) Fallback: lockfiles
     let npm_lock = cwd.join("package-lock.json");
+
     if npm_lock.exists() {
-        return Some(PackageManager::Npm);
+        managers.push(PackageManager::Npm);
     }
 
     let yarn_lock = cwd.join("yarn.lock");
     if yarn_lock.exists() {
-        return Some(PackageManager::Yarn);
+        managers.push(PackageManager::Yarn);
     }
 
     let pnpm_lock = cwd.join("pnpm-lock.yaml");
     if pnpm_lock.exists() {
-        return Some(PackageManager::Pnpm);
+        managers.push(PackageManager::Pnpm);
     }
 
-    None
+    managers
 }

@@ -15,7 +15,7 @@ pub fn read_package_manager_from_package_json(cwd: &Path) -> Option<PackageManag
     let v: Value = serde_json::from_str(&content).ok()?;
     let pm_str = v.get("packageManager")?.as_str()?.to_string();
 
-    // Valores comuns: "pnpm@9.9.0", "npm@10", "yarn@1.22.19".
+    // Common values: "pnpm@9.9.0", "npm@10", "yarn@1.22.19"
     let name = pm_str.split('@').next().unwrap_or("");
     match name {
         "npm" => Some(PackageManager::Npm),
@@ -28,17 +28,17 @@ pub fn read_package_manager_from_package_json(cwd: &Path) -> Option<PackageManag
 pub fn write_package_manager_to_package_json(cwd: &Path, manager: PackageManager) -> Result<()> {
     let package_json_path = cwd.join("package.json");
     if !package_json_path.exists() {
-        // Se não existe, nada a fazer silenciosamente
+        // If it doesn't exist, nothing to do silently
         return Ok(());
     }
 
     let content = std::fs::read_to_string(&package_json_path)
-        .with_context(|| format!("Falha ao ler package.json em {:?}", package_json_path))?;
+        .with_context(|| format!("Failed to read package.json at {:?}", package_json_path))?;
     let mut v: Value =
-        serde_json::from_str(&content).with_context(|| "Falha ao fazer parse do package.json")?;
+        serde_json::from_str(&content).with_context(|| "Failed to parse package.json")?;
 
     let name = manager.as_str();
-    // Tenta detectar a versão instalada do gerenciador (ex.: yarn@3.6.4)
+    // Try to detect the installed version of the manager (e.g., yarn@3.6.4)
     let pm_value = detect_package_manager_version(manager)
         .map(|ver| format!("{}@{}", name, ver))
         .unwrap_or_else(|| name.to_string());
@@ -46,7 +46,7 @@ pub fn write_package_manager_to_package_json(cwd: &Path, manager: PackageManager
 
     let serialized = serde_json::to_string_pretty(&v)?;
     std::fs::write(&package_json_path, serialized)
-        .with_context(|| format!("Falha ao salvar package.json em {:?}", package_json_path))?;
+        .with_context(|| format!("Failed to save package.json at {:?}", package_json_path))?;
     Ok(())
 }
 

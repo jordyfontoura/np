@@ -15,12 +15,12 @@ use crate::script_handler::write_package_manager_to_package_json;
 async fn main() -> Result<()> {
     let cwd = PathBuf::from(env::current_dir()?);
 
-    // Proxy puro: captura tudo após o binário e repassa como está
+    // Pure proxy: capture everything after the binary and forward as-is
     let raw: Vec<String> = env::args().skip(1).collect();
 
     if raw.is_empty() {
         println!(
-            "Use 'np <comando>' para encaminhar ao gerenciador detectado. Ex.: 'np -v', 'np add axios'."
+            "Use 'np <command>' to forward to the detected package manager. Ex.: 'np -v', 'np add axios'."
         );
         return Ok(());
     }
@@ -31,14 +31,18 @@ async fn main() -> Result<()> {
 }
 
 fn resolve_package_manager_interactive(cwd: &PathBuf) -> Result<PackageManager> {
-    if let Some(d) = detect_package_manager(cwd) {
-        return Ok(d);
+    let managers = detect_package_manager(cwd);
+    if managers.len() == 1 {
+        return Ok(managers[0]);
     }
-    // Removido fallback para gerenciador padrão via config
+    if managers.len() > 1 {
+        println!("Multiple package managers detected: {:?}", managers);
+    }
+    // Removed fallback to default manager via config
 
-    println!("\n🤔 Não foi possível determinar o gerenciador de pacotes.");
+    println!("\n🤔 Could not determine the package manager.");
     let choice = Select::new(
-        "Qual gerenciador de pacotes você deseja usar?",
+        "Which package manager would you like to use?",
         vec!["npm".to_string(), "yarn".to_string(), "pnpm".to_string()],
     )
     .prompt()?;
@@ -48,13 +52,14 @@ fn resolve_package_manager_interactive(cwd: &PathBuf) -> Result<PackageManager> 
         _ => PackageManager::Pnpm,
     };
 
-    // Pergunta se pode preencher package.json -> packageManager
-    let can_write =
-        Confirm::new("Deseja preencher o campo 'packageManager' no package.json com esta escolha?")
-            .with_default(true)
-            .prompt()?;
+    // Ask if we can fill package.json -> packageManager
+    let can_write = Confirm::new(
+        "Would you like to save this choice in the 'packageManager' field in package.json?",
+    )
+    .with_default(true)
+    .prompt()?;
     if can_write {
-        // Ignora erros silenciosamente; intenção é conveniência
+        // Ignore errors silently; this is just for convenience
         let _ = write_package_manager_to_package_json(cwd, selected);
     }
     Ok(selected)

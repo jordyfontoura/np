@@ -21,11 +21,11 @@ pub async fn execute_raw(manager: PackageManager, args: &[String]) -> Result<()>
         .stderr(Stdio::inherit())
         .status()
         .await
-        .with_context(|| format!("Falha ao executar {}", bin))?;
+        .with_context(|| format!("Failed to execute {}", bin))?;
 
     if !status.success() {
         let code = status.code().unwrap_or(-1);
-        bail!("❌ Comando falhou com código {}", code);
+        bail!("❌ Command failed with exit code {}", code);
     }
     Ok(())
 }
