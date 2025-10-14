@@ -1,20 +1,11 @@
-use anyhow::{Context, Result, bail};
 use std::process::Stdio;
 use tokio::process::Command;
+use anyhow::{Result, bail, Context};
+use crate::managers::PackageManagerInfo;
 
-use crate::package_detector::PackageManager;
-
-fn manager_to_bin(m: PackageManager) -> &'static str {
-    match m {
-        PackageManager::Npm => "npm",
-        PackageManager::Yarn => "yarn",
-        PackageManager::Pnpm => "pnpm",
-    }
-}
-
-pub async fn execute_raw(manager: PackageManager, args: &[String]) -> Result<()> {
-    let bin = manager_to_bin(manager).to_string();
-    let status = Command::new(&bin)
+pub async fn execute_raw(manager_info: &PackageManagerInfo, args: &[String]) -> Result<()> {
+    let bin = manager_info.name;
+    let status = Command::new(bin)
         .args(args)
         .stdin(Stdio::inherit())
         .stdout(Stdio::inherit())
