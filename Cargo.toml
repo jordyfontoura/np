@@ -1,7 +1,14 @@
 [package]
 name = "np"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+authors = ["jordyfontoura"]
+description = "A blazingly fast, intelligent package manager proxy that automatically detects and forwards commands to npm, yarn, or pnpm"
+readme = "README.md"
+repository = "https://github.com/jordyfontoura/np"
+license = "MIT"
+keywords = ["npm", "yarn", "pnpm", "package-manager", "cli"]
+categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
