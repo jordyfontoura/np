@@ -59,7 +59,7 @@ One command to rule them all. `np` automatically:
 ### Using Cargo (Recommended)
 
 ```bash
-cargo install np
+cargo install np-cli
 ```
 
 ### From Source
