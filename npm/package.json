@@ -1,0 +1,42 @@
+{
+  "author": "jordyfontoura",
+  "bin": {
+    "np": "./dist/main.js"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^6.0.0",
+    "tryless": "^1.5.5"
+  },
+  "description": "A blazingly fast, intelligent package manager proxy that automatically detects and forwards commands to npm, yarn, or pnpm",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "keywords": [
+    "npm",
+    "yarn",
+    "pnpm",
+    "package-manager",
+    "cli"
+  ],
+  "license": "MIT",
+  "main": "dist/main.js",
+  "name": "@kitlib/np",
+  "packageManager": "pnpm@10.18.3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jordyfontoura/np"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/main.ts",
+    "test": "vitest run",
+    "test:coverage": "vitest --coverage",
+    "test:watch": "vitest --watch"
+  },
+  "types": "dist/main.d.ts",
+  "version": "1.0.0"
+}

@@ -62,6 +62,23 @@ One command to rule them all. `np` automatically:
 cargo install np-cli
 ```
 
+### Using npm / npx
+
+```bash
+# Global install
+npm i -g @kitlib/np
+
+# Or run without installing
+npx @kitlib/np --version
+```
+
+After installing globally, just use `np` as a drop-in replacement:
+
+```bash
+np install
+np run dev
+```
+
 ### From Source
 
 ```bash
